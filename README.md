@@ -1,5 +1,5 @@
-CircleCI Orb pre-commit hook
-----------------------------
+CircleCI Orb Pack and Validate pre-commit hook
+----------------------------------------------
 
 A [pre-commit](https://github.com/pre-commit/pre-commit) hook to run CircleCI Orb `pack` and `validate` steps on your commits.
 
