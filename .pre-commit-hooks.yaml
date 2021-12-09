@@ -1,0 +1,10 @@
+- id: circleci-orb-validate
+  name: Validate CircleCI Orb
+  entry: src/validate.sh
+  language: script
+  fail_fast: false
+  verbose: false
+  pass_filenames: false
+  require_serial: false
+  args:
+    - src/
