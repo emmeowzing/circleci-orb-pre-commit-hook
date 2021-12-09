@@ -6,4 +6,4 @@
   pass_filenames: false
   require_serial: false
   args:
-    - src/
+    - src
