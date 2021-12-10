@@ -4,6 +4,5 @@
   language: script
   verbose: false
   pass_filenames: false
-  require_serial: false
-  args:
-    - src
+  always_run: true
+  args: []

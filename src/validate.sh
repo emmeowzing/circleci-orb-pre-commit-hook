@@ -9,7 +9,7 @@ fi
 
 if [  $# -ne 2 ]
 then
-    printf "circleci orb validate expected a src directory to be set in the pre-commit-config, defaulting to 'src/'\\n"
+    printf "'circleci orb validate' expected a source directory to be set in the pre-commit-config, defaulting to 'src/'\\n"
     SRC="src/"
 else
     SRC="$1"
