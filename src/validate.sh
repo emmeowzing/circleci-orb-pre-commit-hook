@@ -7,7 +7,7 @@ then
     exit 1
 fi
 
-if [  $# -ne 2 ]
+if [ $# -ne 2 ]
 then
     printf "'circleci orb validate' expected a source directory to be set in the pre-commit-config, defaulting to 'src/'\\n"
     SRC="src/"
