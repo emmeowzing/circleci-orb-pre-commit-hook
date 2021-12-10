@@ -13,7 +13,7 @@ You must have the `circleci` CLI installed, as well as specify the path to the o
 repos:
 ...
 - repo: https://github.com/bjd2385/circleci-orb-pre-commit-hook
-    rev: v1.0.0
+    rev: v1.0.1
     hooks:
       - id: circleci-orb-validate
         args:
