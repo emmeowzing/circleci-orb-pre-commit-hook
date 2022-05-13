@@ -10,8 +10,14 @@ fi
 SRC="${1:-src}"
 PREPACK="${2:-false}"
 
+# Pre-pack.
 if [ "$PREPACK" = "true" ]; then
-    find "$SRC" -maxdepth 1 -mindepth 1 -type d -print0 | xargs --null -I % basename % | xargs --null -I % ./scripts/pre-pack.sh "$SRC" %
+    find "$SRC" -maxdepth 1 -mindepth 1 -type d -0 | xargs -I % basename % | xargs -I % ./scripts/pre-pack.sh "$SRC" %
 fi
 
 circleci orb validate <(circleci orb pack "$SRC") >/dev/null
+
+# Clean up pre-pack.
+if [ "$PREPACK" = "true" ]; then
+    find "$SRC" -maxdepth 1 -mindepth 1 -type d -0 | xargs -I % basename % | xargs -I % ./scripts/rev-pack.sh "$SRC" %
+fi
