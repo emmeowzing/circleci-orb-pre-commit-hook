@@ -15,9 +15,12 @@ if [ "$PREPACK" = "true" ]; then
     find "$SRC" -maxdepth 1 -mindepth 1 -type d -0 | xargs -I % basename % | xargs -I % ./scripts/pre-pack.sh "$SRC" %
 fi
 
-circleci orb validate <(circleci orb pack "$SRC") >/dev/null
+orb="$(mktemp)"
+circleci orb pack "$SRC" > "$orb"
 
 # Clean up pre-pack.
 if [ "$PREPACK" = "true" ]; then
     find "$SRC" -maxdepth 1 -mindepth 1 -type d -0 | xargs -I % basename % | xargs -I % ./scripts/rev-pack.sh "$SRC" %
 fi
+
+circleci orb validate "$orb"
