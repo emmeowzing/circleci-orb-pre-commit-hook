@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+
 set -e
 
 if ! command -v circleci &> /dev/null
@@ -12,15 +13,20 @@ PREPACK="${2:-false}"
 
 # Pre-pack.
 if [ "$PREPACK" = "true" ]; then
-    find "$SRC" -maxdepth 1 -mindepth 1 -type d -0 | xargs -I % basename % | xargs -I % ./scripts/pre-pack.sh "$SRC" %
+    # shellcheck disable=SC2038
+    find "$SRC" -maxdepth 1 -mindepth 1 -type d | xargs -I % basename % | xargs -I % ./scripts/pre-pack.sh "$SRC" %
 fi
 
-orb="$(mktemp)"
+orb="$(mktemp -p .)"
 circleci orb pack "$SRC" > "$orb"
 
 # Clean up pre-pack.
 if [ "$PREPACK" = "true" ]; then
-    find "$SRC" -maxdepth 1 -mindepth 1 -type d -0 | xargs -I % basename % | xargs -I % ./scripts/rev-pack.sh "$SRC" %
+    # shellcheck disable=SC2038
+    find "$SRC" -maxdepth 1 -mindepth 1 -type d | xargs -I % basename % | xargs -I % ./scripts/rev-pack.sh "$SRC" %
 fi
 
-circleci orb validate "$orb"
+circleci orb validate "$orb" || true
+exitCode="$?"
+rm "${orb:?}"
+exit "$exitCode"
