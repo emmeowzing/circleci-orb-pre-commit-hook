@@ -14,7 +14,7 @@ PREPACK="${2:-false}"
 # Pre-pack.
 if [ "$PREPACK" = "true" ]; then
     # shellcheck disable=SC2038
-    find "$SRC" -maxdepth 1 -mindepth 1 -type d | xargs -I % basename % | xargs -I % ./scripts/pre-pack.sh "$SRC" %
+    find "$SRC" -maxdepth 1 -mindepth 1 -type d | xargs -I % basename % | xargs -I % ./scripts/pre-pack.sh "$SRC" % &>/dev/null
 fi
 
 orb="$(mktemp -p .)"
@@ -23,7 +23,7 @@ circleci orb pack "$SRC" > "$orb"
 # Clean up pre-pack.
 if [ "$PREPACK" = "true" ]; then
     # shellcheck disable=SC2038
-    find "$SRC" -maxdepth 1 -mindepth 1 -type d | xargs -I % basename % | xargs -I % ./scripts/rev-pack.sh "$SRC" %
+    find "$SRC" -maxdepth 1 -mindepth 1 -type d | xargs -I % basename % | xargs -I % ./scripts/rev-pack.sh "$SRC" % &>/dev/null
 fi
 
 circleci orb validate "$orb" || true
