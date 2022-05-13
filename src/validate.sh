@@ -7,9 +7,6 @@ then
     exit 1
 fi
 
-echo "${@[@]}"
-echo "$@"
-
 SRC="${1:-src}"
 PREPACK="${2:-false}"
 
