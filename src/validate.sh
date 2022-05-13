@@ -7,12 +7,11 @@ then
     exit 1
 fi
 
-if [ $# -ne 2 ]
-then
-    printf "'circleci orb validate' expected a source directory to be set in the pre-commit-config, defaulting to 'src/'\\n"
-    SRC="src/"
-else
-    SRC="$1"
+SRC="${1:-src}"
+PREPACK="${2:-false}"
+
+if [ "$PREPACK" = true ]; then
+    find "$SRC" -maxdepth 1 -mindepth 1 -type d -print0 | xargs --null -I % basename % | xargs --null -I % ./scripts/pre-pack.sh "$SRC" %
 fi
 
 circleci orb validate <(circleci orb pack "$SRC") >/dev/null
