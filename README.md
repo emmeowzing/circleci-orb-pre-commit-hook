@@ -16,7 +16,4 @@ repos:
     rev: v1.2.0
     hooks:
       - id: circleci-orb-validate
-        args:
-          - src     # Target the src/ directory.
-          - 'true'  # Enable pre-pack prior to validation.
 ```
