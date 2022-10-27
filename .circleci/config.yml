@@ -34,7 +34,7 @@ jobs:
             sudo dpkg -i gh.deb
       - run:
           name: Generate release
-          command: |+
+          command: |
             # Get latest tag.
             git fetch --all --tags
             export LATEST_TAG="$(git tag | sort -V | tail -1)"
@@ -61,7 +61,7 @@ jobs:
       - checkout
       - run:
           name: Try this repo
-          command: |+
+          command: |
             pip install -q pre-commit
             printf "Starting hook validation\\n"
             mapfile -t ARR < <(grep -oP "(?<=id: ).*" .pre-commit-hooks.yaml)
