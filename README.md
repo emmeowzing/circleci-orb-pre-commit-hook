@@ -5,7 +5,7 @@ A [pre-commit](https://github.com/pre-commit/pre-commit) hook to run CircleCI Or
 
 ### Prerequisites
 
-You must have the `circleci` CLI installed, as well as specify the path to the orb source you would like to pack and validate as an argument. Defaults to `src/`, since `circleci orb init` will, by default, generate an unpacked repository structure for an orb's source under `src/`.
+You must have the `circleci` CLI installed.
 
 #### Example `.pre-commit-config.yaml`
 

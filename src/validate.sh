@@ -7,7 +7,7 @@ then
 fi
 
 orb="$(mktemp -p .)"
-circleci orb pack "$@" > "$orb"
+circleci orb pack src/ "$@" > "$orb"
 
 circleci orb validate "$orb"
 exitCode="$?"
