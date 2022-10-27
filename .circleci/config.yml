@@ -51,7 +51,7 @@ jobs:
       - run:
           name: Validate .pre-commit-hooks.yaml manifest
           command: |+
-            pip install pre-commit
+            pip install -q pre-commit
             pre-commit validate-manifest
 
   try-repo:
@@ -62,7 +62,8 @@ jobs:
       - run:
           name: Try this repo
           command: |+
-            pip install pre-commit
+            pip install -q pre-commit
+            printf "Starting hook validation"
             mapfile -t ARR < <(grep -oP "(?<=id: ).*" .pre-commit-hooks.yaml
             for _id in ${ARR[@]}; do
                 printf "Checking %s hook\\n" "$_id"
