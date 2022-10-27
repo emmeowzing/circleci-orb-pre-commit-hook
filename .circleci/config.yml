@@ -1,0 +1,91 @@
+version: 2.1
+
+setup: true
+
+
+executors:
+  default:
+    docker:
+      - image: cimg/base:stable
+
+
+orbs:
+  shellcheck: circleci/shellcheck@3.1.1
+
+
+commands: {}
+
+
+jobs:
+  generate-release:
+    executor: default
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Install gh CLI
+          command: |+
+            wget https://github.com/cli/cli/releases/download/v2.9.0/gh_2.9.0_linux_amd64.deb -O gh.deb
+            sudo dpkg -i gh.deb
+      - run:
+          name: Generate release
+          command: |+
+            # Get latest tag.
+            git fetch --all --tags
+            export LATEST_TAG="$(git tag | sort -V | tail -1)"
+            echo "$LATEST_TAG"
+            # Generate release from tag.
+            echo "$GITHUB_TOKEN" | gh auth login --with-token 2>/dev/null || true
+            gh release create "$LATEST_TAG" --generate-notes
+
+  validate-manifest:
+    executor: default
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Validate .pre-commit-hooks.yaml manifest
+          command: |+
+            pre-commit validate-manifest
+
+  try-repo:
+    executor: default
+    resource_class: small
+    steps:
+      - checkout
+      - run:
+          name: Try this repo
+          command: |+
+            mapfile -t ARR < <(grep -oP "(?<=id: ).*" .pre-commit-hooks.yaml
+            for _id in ${ARR[@]}; do
+                pre-commit try-repo ./ "$_id" --verbose --all-files
+            done
+
+
+workflows:
+  on-commit:
+    jobs:
+      - shellcheck/check:
+          dir: .
+          exclude: SC2148
+          filters:
+            branches:
+              ignore:
+                - master
+
+      - validate-manifest:
+          filters:
+            branches:
+              ignore:
+                - master
+
+  on-tag:
+    jobs:
+      - generate-release:
+          name: Generate release from tag
+          context: github
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v?[0-9]+\.[0-9]+\.[0-9]+$/
