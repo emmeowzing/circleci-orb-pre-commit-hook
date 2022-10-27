@@ -63,7 +63,7 @@ jobs:
           name: Try this repo
           command: |+
             pip install -q pre-commit
-            printf "Starting hook validation"
+            printf "Starting hook validation\\n"
             mapfile -t ARR < <(grep -oP "(?<=id: ).*" .pre-commit-hooks.yaml)
             for _id in ${ARR[@]}; do
                 printf "Checking %s hook\\n" "$_id"
