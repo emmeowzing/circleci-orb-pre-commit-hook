@@ -8,6 +8,10 @@ executors:
     docker:
       - image: cimg/base:stable
 
+  python3-9:
+    docker:
+      - image: cimg/python:3.9.14
+
 
 orbs:
   shellcheck: circleci/shellcheck@3.1.1
@@ -40,23 +44,25 @@ jobs:
             gh release create "$LATEST_TAG" --generate-notes
 
   validate-manifest:
-    executor: default
+    executor: python3-9
     resource_class: small
     steps:
       - checkout
       - run:
           name: Validate .pre-commit-hooks.yaml manifest
           command: |+
+            pip install pre-commit
             pre-commit validate-manifest
 
   try-repo:
-    executor: default
+    executor: python3-9
     resource_class: small
     steps:
       - checkout
       - run:
           name: Try this repo
           command: |+
+            pip install pre-commit
             mapfile -t ARR < <(grep -oP "(?<=id: ).*" .pre-commit-hooks.yaml
             for _id in ${ARR[@]}; do
                 pre-commit try-repo ./ "$_id" --verbose --all-files
