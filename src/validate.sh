@@ -1,5 +1,4 @@
 #! /usr/bin/env bash
-
 set -e
 
 if ! command -v circleci &> /dev/null
@@ -8,25 +7,12 @@ then
     exit 1
 fi
 
-SRC="${1:-src}"
-PREPACK="${2:-false}"
-
-# Pre-pack.
-if [ "$PREPACK" = "true" ]; then
-    # shellcheck disable=SC2038
-    find "$SRC" -maxdepth 1 -mindepth 1 -type d | xargs -I % basename % | xargs -I % ./scripts/pre-pack.sh "$SRC" % &>/dev/null
+if [  $# -ne 2 ]
+then
+    printf "'circleci orb validate' expected a source directory to be set in the pre-commit-config, defaulting to 'src/'\\n"
+    SRC="src/"
+else
+    SRC="$1"
 fi
 
-orb="$(mktemp -p .)"
-circleci orb pack "$SRC" > "$orb"
-
-# Clean up pre-pack.
-if [ "$PREPACK" = "true" ]; then
-    # shellcheck disable=SC2038
-    find "$SRC" -maxdepth 1 -mindepth 1 -type d | xargs -I % basename % | xargs -I % ./scripts/rev-pack.sh "$SRC" % &>/dev/null
-fi
-
-circleci orb validate "$orb" || true
-exitCode="$?"
-rm "${orb:?}"
-exit "$exitCode"
+circleci orb validate <(circleci orb pack "$SRC") >/dev/null
