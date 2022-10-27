@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+
 set -e
 
 if ! command -v circleci &> /dev/null
@@ -15,4 +16,4 @@ else
     SRC="$1"
 fi
 
-circleci orb validate <(circleci orb pack "$SRC") >/dev/null
+circleci orb validate <(circleci orb pack "$SRC" --skip-update-check) >/dev/null
