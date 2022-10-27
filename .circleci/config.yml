@@ -70,16 +70,8 @@ workflows:
       - shellcheck/check:
           dir: src/
           exclude: SC2148
-          filters:
-            branches:
-              ignore:
-                - master
 
-      - validate-manifest:
-          filters:
-            branches:
-              ignore:
-                - master
+      - validate-manifest
 
       # On tag
       - generate-release:
