@@ -80,6 +80,7 @@ workflows:
           exclude: SC2148
 
       - validate-manifest
+      - try-repo
 
       # On tag
       - generate-release:
