@@ -11,6 +11,7 @@ executors:
 
 orbs:
   shellcheck: circleci/shellcheck@3.1.1
+  dynamic-continuation: bjd2385/dynamic-continuation@3.3.0
 
 
 commands: {}
@@ -63,10 +64,11 @@ jobs:
 
 
 workflows:
-  on-commit:
+  circleci-orb-pre-commit-hook:
     jobs:
+      # On-commit
       - shellcheck/check:
-          dir: .
+          dir: src/
           exclude: SC2148
           filters:
             branches:
@@ -79,8 +81,7 @@ workflows:
               ignore:
                 - master
 
-  on-tag:
-    jobs:
+      # On tag
       - generate-release:
           name: Generate release from tag
           context: github
