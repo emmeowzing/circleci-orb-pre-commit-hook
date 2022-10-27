@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+set -e
 
 if ! command -v circleci &> /dev/null
 then
@@ -6,12 +7,12 @@ then
     exit 1
 fi
 
-orb="$(mktemp -p .)"
-circleci orb pack src/ "$@" > "$orb"
+if [  $# -ne 2 ]
+then
+    printf "'circleci orb validate' expected a source directory to be set in the pre-commit-config, defaulting to 'src/'\\n"
+    SRC="src/"
+else
+    SRC="$1"
+fi
 
-circleci orb validate "$orb"
-exitCode="$?"
-
-rm "${orb:?}"
-
-exit "$exitCode"
+circleci orb validate <(circleci orb pack "$SRC") >/dev/null
