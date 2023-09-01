@@ -14,7 +14,7 @@ executors:
 
 
 orbs:
-  shellcheck: circleci/shellcheck@3.1.2
+  shellcheck: circleci/shellcheck@3.2.0
   dynamic-continuation: bjd2385/dynamic-continuation@3.6.12
 
 
